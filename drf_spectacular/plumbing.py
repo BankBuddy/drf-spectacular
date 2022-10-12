@@ -1116,7 +1116,6 @@ def camelize_operation(path, operation):
 def build_mock_request(method, path, view, original_request, **kwargs):
     """ build a mocked request and use original request as reference if available """
     request = getattr(APIRequestFactory(), method.lower())(path=path)
-    request = view.initialize_request(request)
     if original_request:
         request.user = original_request.user
         request.auth = original_request.auth
@@ -1129,6 +1128,7 @@ def build_mock_request(method, path, view, original_request, **kwargs):
             if name in ['HTTP_ACCEPT', 'HTTP_COOKIE', 'HTTP_AUTHORIZATION']:
                 continue
             request.META[name] = value
+    request = view.initialize_request(request)
     return request
 
 
